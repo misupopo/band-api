@@ -36,8 +36,18 @@ const insertDocument = async (collectionName, insertObject) => {
     return await collection.insert(insertObject);
 };
 
+const updateDocument = async (collectionName, targetObject, updateObject) => {
+    const db = await mongoConnection();
+
+    const collection = await db.collection(collectionName);
+    // db.close();
+
+    return await collection.update(targetObject, updateObject);
+};
+
 
 module.exports.mongoConnection = mongoConnection;
 module.exports.findAllDocuments = findAllDocuments;
 module.exports.findDocument = findDocument;
 module.exports.insertDocument = insertDocument;
+module.exports.updateDocument = updateDocument;
