@@ -10,6 +10,7 @@ const index = require('./routes/index');
 const users = require('./routes/users');
 const push = require('./routes/push');
 const live = require('./routes/live');
+const release = require('./routes/release');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/push', push);
 app.use('/live', live);
+app.use('/release', release);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
