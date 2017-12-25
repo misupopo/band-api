@@ -30,4 +30,44 @@ router.get('/list', async (req, res, next) => {
     });
 });
 
+router.get('/detail', async (req, res, next) => {
+    const liveData = await mongo.findDocument('release', {
+        _id: new mongoDb.ObjectId(req.query.id)
+    });
+
+    res.json({
+        result: liveData[0] || {}
+    });
+});
+
+router.post('/detail', async (req, res, next) => {
+    const params = req.body.params;
+
+    [
+        'date'
+    ].forEach((key) => {
+        params[key] = new Date(params[key]);
+    });
+
+    params['update_at'] = new Date();
+
+    const id = new mongoDb.ObjectId(params.id);
+
+    if (params.id) {
+        delete params.id;
+    }
+
+    params.price_value = parseInt(params.price_value, 10);
+
+    await mongo.updateDocument('release', {
+        _id: id
+    }, params);
+
+    res.json({
+        result: params || {}
+    });
+});
+
+
+
 module.exports = router;
