@@ -68,6 +68,31 @@ router.post('/detail', async (req, res, next) => {
     });
 });
 
+const path = require('path');
+const uploadsDir = path.resolve(__dirname, '../public/images');
+const fs = require('fs');
+const multer = require('multer');
+const rimraf = require('rimraf');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadsDir);
+    },
+    filename: (req, file, cb) => {
+        let ext = path.extname(file.originalname);
+        cb(null, `${Math.random().toString(36).substring(7)}${ext}`);
+    }
+});
+
+const upload = multer({ storage: storage });
+
+router.post('/image', upload.any(), async (req, res, next) => {
+    console.log(req.body);
+
+    // rimraf.sync(`${uploadsDir}/**/*`);
+    res.status(200).json(req.files);
+});
+
 
 
 module.exports = router;
