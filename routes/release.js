@@ -2,10 +2,13 @@ const express = require('express');
 const router = express.Router();
 const mongo = require('../mongo');
 const mongoDb = require('mongodb');
+const imageManager = require('../service/imageManager');
+const upload = imageManager.imageManager();
 
 /* GET users listing. */
-router.post('/create', async (req, res, next) => {
-    const params = req.body.params;
+router.post('/create', upload.any(), async (req, res, next) => {
+    const params = req.body;
+    const file = req.files[0];
 
     [
         'date'
@@ -15,6 +18,8 @@ router.post('/create', async (req, res, next) => {
 
     params['create_at'] = new Date();
     params['update_at'] = new Date();
+
+    params['image_name'] = file.filename;
 
     await mongo.insertDocument('release', params);
 
@@ -68,26 +73,8 @@ router.post('/detail', async (req, res, next) => {
     });
 });
 
-const path = require('path');
-const uploadsDir = path.resolve(__dirname, '../public/images');
-const fs = require('fs');
-const multer = require('multer');
-const rimraf = require('rimraf');
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadsDir);
-    },
-    filename: (req, file, cb) => {
-        let ext = path.extname(file.originalname);
-        cb(null, `${Math.random().toString(36).substring(7)}${ext}`);
-    }
-});
-
-const upload = multer({ storage: storage });
-
 router.post('/image', upload.any(), async (req, res, next) => {
-    console.log(req.body);
+    const file = req.files[0];
 
     // rimraf.sync(`${uploadsDir}/**/*`);
     res.status(200).json(req.files);
