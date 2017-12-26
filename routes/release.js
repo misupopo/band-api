@@ -6,9 +6,8 @@ const imageManager = require('../service/imageManager');
 const upload = imageManager.imageManager();
 
 /* GET users listing. */
-router.post('/create', upload.any(), async (req, res, next) => {
-    const params = req.body;
-    const file = req.files[0];
+router.post('/create', async (req, res, next) => {
+    const params = req.body.params;
 
     [
         'date'
@@ -19,29 +18,50 @@ router.post('/create', upload.any(), async (req, res, next) => {
     params['create_at'] = new Date();
     params['update_at'] = new Date();
 
-    params['image_name'] = file.filename;
+    const data = await mongo.insertDocument('release', params);
 
-    await mongo.insertDocument('release', params);
+    res.json({
+        result: data
+    });
+});
 
-    res.json('success');
+router.post('/create/image', upload.any(), async (req, res, next) => {
+    const file = req.files[0];
+    const id = new mongoDb.ObjectId(req.body.id);
+
+    const releaseData = await mongo.findDocument('release', {
+        _id: id
+    });
+
+    releaseData[0].file_name = file.filename;
+
+    delete releaseData[0]._id;
+
+    const data = await mongo.updateDocument('release', {
+        _id: id
+    }, releaseData[0]);
+
+    res.json({
+        result: releaseData
+    });
 });
 
 router.get('/list', async (req, res, next) => {
-    const liveData = await mongo.findAllDocuments('release');
+    const releaseData = await mongo.findAllDocuments('release');
 
     res.json({
         now: new Date(),
-        result: liveData
+        result: releaseData
     });
 });
 
 router.get('/detail', async (req, res, next) => {
-    const liveData = await mongo.findDocument('release', {
+    const releaseData = await mongo.findDocument('release', {
         _id: new mongoDb.ObjectId(req.query.id)
     });
 
     res.json({
-        result: liveData[0] || {}
+        result: releaseData[0] || {}
     });
 });
 
