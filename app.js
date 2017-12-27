@@ -11,6 +11,7 @@ const users = require('./routes/users');
 const push = require('./routes/push');
 const live = require('./routes/live');
 const release = require('./routes/release');
+const news = require('./routes/news');
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use('/users', users);
 app.use('/push', push);
 app.use('/live', live);
 app.use('/release', release);
+app.use('/news', news);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
