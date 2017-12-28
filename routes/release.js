@@ -49,6 +49,10 @@ router.post('/create/image', upload.any(), async (req, res, next) => {
 router.get('/list', async (req, res, next) => {
     const releaseData = await mongo.findAllDocuments('release');
 
+    releaseData.sort(function (a, b) {
+        return new Date(b.date) - new Date(a.date);
+    });
+
     res.json({
         now: new Date(),
         result: releaseData
