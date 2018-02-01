@@ -45,9 +45,18 @@ const updateDocument = async (collectionName, targetObject, updateObject) => {
     return await collection.update(targetObject, updateObject);
 };
 
+const removeDocument = async (collectionName, searchObject) => {
+    const db = await mongoConnection();
+
+    const collection = await db.collection(collectionName);
+
+    return await collection.find(searchObject).remove();
+};
+
 
 module.exports.mongoConnection = mongoConnection;
 module.exports.findAllDocuments = findAllDocuments;
 module.exports.findDocument = findDocument;
 module.exports.insertDocument = insertDocument;
 module.exports.updateDocument = updateDocument;
+module.exports.removeDocument = removeDocument;

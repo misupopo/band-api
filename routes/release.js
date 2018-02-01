@@ -97,6 +97,16 @@ router.post('/detail', async (req, res, next) => {
     });
 });
 
+router.post('/remove', async (req, res, next) => {
+    const removeData = await mongo.removeDocument('release', {
+        _id: new mongoDb.ObjectId(req.query.id)
+    });
+
+    res.json({
+        result: removeData[0] || {}
+    });
+});
+
 router.post('/image', upload.any(), async (req, res, next) => {
     const file = req.files[0];
 
