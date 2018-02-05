@@ -98,8 +98,16 @@ router.post('/detail', async (req, res, next) => {
 });
 
 router.post('/remove', async (req, res, next) => {
+    const params = req.body.params;
+
+    const id = new mongoDb.ObjectId(params.id);
+
+    if (params.id) {
+        delete params.id;
+    }
+
     const removeData = await mongo.removeDocument('release', {
-        _id: new mongoDb.ObjectId(req.query.id)
+        _id: id
     });
 
     res.json({

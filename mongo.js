@@ -50,7 +50,7 @@ const removeDocument = async (collectionName, searchObject) => {
 
     const collection = await db.collection(collectionName);
 
-    return await collection.find(searchObject).remove();
+    return await collection.remove(searchObject);
 };
 
 
