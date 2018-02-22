@@ -92,8 +92,12 @@ router.post('/detail', async (req, res, next) => {
         _id: id
     }, params);
 
+    const releaseData = await mongo.findDocument('release', {
+        _id: new mongoDb.ObjectId(id)
+    });
+
     res.json({
-        result: params || {}
+        result: releaseData || {}
     });
 });
 
