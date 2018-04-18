@@ -10,6 +10,7 @@ const index = require('./routes/index');
 const users = require('./routes/users');
 const live = require('./routes/live');
 const release = require('./routes/release');
+const carousel = require('./routes/carousel');
 const news = require('./routes/news');
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/', index);
 app.use('/api/users', users);
 app.use('/api/live', live);
 app.use('/api/release', release);
+app.use('/api/carousel', carousel);
 app.use('/api/news', news);
 app.use('/api/images', express.static('public/images'));
 
