@@ -19,4 +19,10 @@ const imageManager = function () {
     return multer({ storage: storage });
 };
 
+const remove = function (fileName) {
+    rimraf(uploadsDir + '/' + fileName, callback)
+};
+
 module.exports.imageManager = imageManager;
+module.exports.remove = remove;
+

@@ -7,6 +7,7 @@ const mongoDb = require('mongodb');
 router.get('/list', async (req, res, next) => {
     const liveData = await mongo.findAllDocuments('live');
     const releaseData = await mongo.findAllDocuments('release');
+    const infoData = await mongo.findAllDocuments('info');
 
     liveData.map(function (data) {
         data['news_type'] = 'live';
@@ -16,9 +17,13 @@ router.get('/list', async (req, res, next) => {
         data['news_type'] = 'release';
     });
 
+    infoData.map(function (data) {
+        data['news_type'] = 'info';
+    });
+
     let newsData = [];
 
-    newsData = newsData.concat(liveData, releaseData);
+    newsData = newsData.concat(liveData, releaseData, infoData);
 
     newsData.sort(function (a, b) {
        return new Date(b.date) - new Date(a.date);
