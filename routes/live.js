@@ -26,6 +26,10 @@ router.post('/create', async (req, res, next) => {
 router.get('/list', async (req, res, next) => {
     const liveData = await mongo.findAllDocuments('live');
 
+    liveData.sort(function (a, b) {
+        return new Date(b.date) - new Date(a.date);
+    });
+
     res.json({
         now: new Date(),
         result: liveData
