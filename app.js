@@ -13,6 +13,7 @@ const release = require('./routes/release');
 const info = require('./routes/info');
 const carousel = require('./routes/carousel');
 const news = require('./routes/news');
+const recruitment = require('./routes/recruitment');
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use('/api/release', release);
 app.use('/api/info', info);
 app.use('/api/carousel', carousel);
 app.use('/api/news', news);
+app.use('/api/recruitment', recruitment);
 app.use('/api/images', express.static('public/images'));
 
 // catch 404 and forward to error handler
