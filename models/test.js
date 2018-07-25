@@ -30,8 +30,8 @@ TestSchema.pre('save', function (next) {
     next();
 });
 
-TestSchema.methods.createTest = () => {
-    return 'test';
+TestSchema.methods.createTest = function () {
+    this.title = 'methodCreate'
 };
 
 // 三つ目の引数は複数形の命名規則を無視して collection を作成する
