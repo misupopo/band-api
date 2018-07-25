@@ -5,6 +5,8 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const mongo = require('./mongo');
+const mongoose = require('mongoose');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -14,6 +16,7 @@ const info = require('./routes/info');
 const carousel = require('./routes/carousel');
 const news = require('./routes/news');
 const recruitment = require('./routes/recruitment');
+const test = require('./routes/test');
 
 const app = express();
 
@@ -38,6 +41,7 @@ app.use('/api/info', info);
 app.use('/api/carousel', carousel);
 app.use('/api/news', news);
 app.use('/api/recruitment', recruitment);
+app.use('/api/test', test);
 app.use('/api/images', express.static('public/images'));
 
 // catch 404 and forward to error handler
@@ -58,6 +62,25 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-app.listen(9001);
+function connect () {
+    const portNumber = 9001;
+
+    const options = {
+        keepAlive: 1,
+        useNewUrlParser: true
+    };
+
+    mongo.mongooseConection(options).then(
+        () => {
+            app.listen(portNumber);
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+};
+
+connect();
+
 
 module.exports = app;

@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017/band_admin';
+const mongoose = require('mongoose');
 
 const mongoConnection = async () => {
     return new Promise(function (resolve, reject) {
@@ -7,6 +8,10 @@ const mongoConnection = async () => {
             resolve(db);
         });
     });
+};
+
+const mongooseConection = async (options) => {
+    return mongoose.connect(url, options).connection;
 };
 
 const findAllDocuments = async (collectionName) => {
@@ -53,8 +58,8 @@ const removeDocument = async (collectionName, searchObject) => {
     return await collection.remove(searchObject);
 };
 
-
 module.exports.mongoConnection = mongoConnection;
+module.exports.mongooseConection = mongooseConection;
 module.exports.findAllDocuments = findAllDocuments;
 module.exports.findDocument = findDocument;
 module.exports.insertDocument = insertDocument;
