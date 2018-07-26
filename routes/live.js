@@ -2,96 +2,48 @@ const express = require('express');
 const router = express.Router();
 const mongo = require('../mongo');
 const mongoDb = require('mongodb');
+const Live = require('../models/live');
 
 /* GET users listing. */
 router.post('/create', async (req, res, next) => {
     const params = req.body.params;
 
-    [
-        'enter_time',
-        'start_time',
-        'date'
-    ].forEach((key) => {
-        params[key] = new Date(params[key]);
-    });
-
-    params['create_at'] = new Date();
-    params['update_at'] = new Date();
-
-    await mongo.insertDocument('live', params);
+    const live = new Live(params);
+    live.addLiveList();
 
     res.json('success');
 });
 
 router.get('/list', async (req, res, next) => {
-    const liveData = await mongo.findAllDocuments('live');
-
-    liveData.sort(function (a, b) {
-        return new Date(b.date) - new Date(a.date);
-    });
+    const live = new Live();
 
     res.json({
         now: new Date(),
-        result: liveData
+        result: await live.getLiveList()
     });
 });
 
 router.get('/detail', async (req, res, next) => {
-    const liveData = await mongo.findDocument('live', {
-        _id: new mongoDb.ObjectId(req.query.id)
-    });
+    const live = new Live();
 
     res.json({
-        result: liveData[0] || {}
+        result: await live.getLiveDetail(req.query.id) || {}
     });
 });
 
 router.post('/detail', async (req, res, next) => {
-    const params = req.body.params;
-
-    [
-        'enter_time',
-        'start_time',
-        'date'
-    ].forEach((key) => {
-        params[key] = new Date(params[key]);
-    });
-
-    params['update_at'] = new Date();
-
-    const id = new mongoDb.ObjectId(params.id);
-
-    if (params.id) {
-        delete params.id;
-    }
-
-    params.advance_sale_ticket = parseInt(params.advance_sale_ticket, 10);
-    params.day_ticket = parseInt(params.day_ticket, 10);
-
-    await mongo.updateDocument('live', {
-        _id: id
-    }, params);
+    const live = new Live();
 
     res.json({
-        result: params || {}
+        result: await live.updateLiveDetail(req.body.params.id, req.body.params) || {}
     });
 });
 
 router.post('/remove', async (req, res, next) => {
-    const params = req.body.params;
-
-    const id = new mongoDb.ObjectId(params.id);
-
-    if (params.id) {
-        delete params.id;
-    }
-
-    const removeData = await mongo.removeDocument('live', {
-        _id: id
-    });
+    const live = new Live();
 
     res.json({
-        result: removeData[0] || {}
+        result: await live.removeLiveDetail(req.body.params.id) || {}
     });
 });
 
